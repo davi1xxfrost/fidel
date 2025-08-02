@@ -1,0 +1,19 @@
+{
+  "name": "Barbearia Estilo Clássico - Cartão Fidelidade",
+  "short_name": "Barbearia Fidelidade",
+  "description": "Sistema de cartão fidelidade para Barbearia Estilo Clássico",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#8B4513",
+  "background_color": "#F5F3F0",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["lifestyle", "business"]
+}
