@@ -1,19 +1,128 @@
 {
   "name": "Barbearia Estilo Clássico - Cartão Fidelidade",
   "short_name": "Barbearia Fidelidade",
-  "description": "Sistema de cartão fidelidade para Barbearia Estilo Clássico",
+  "description": "Sistema de cartão fidelidade para Barbearia Estilo Clássico - Ganhe pontos e resgate recompensas",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "theme_color": "#8B4513",
   "background_color": "#F5F3F0",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["lifestyle", "business", "shopping"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "categories": ["lifestyle", "business"]
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "375x667",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Cartão de fidelidade mobile"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard da barbearia"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Meu Cartão",
+      "short_name": "Cartão",
+      "description": "Visualizar meu cartão de fidelidade",
+      "url": "/cliente-meu-cartao",
+      "icons": [
+        {
+          "src": "/icon-card.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Scan QR",
+      "short_name": "Scanner",
+      "description": "Escanear QR Code para ganhar pontos",
+      "url": "/scan-qrcode",
+      "icons": [
+        {
+          "src": "/icon-qr.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Recompensas",
+      "short_name": "Prêmios",
+      "description": "Ver recompensas disponíveis",
+      "url": "/cliente-recompensas",
+      "icons": [
+        {
+          "src": "/icon-rewards.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "application/json": [".json"],
+        "text/csv": [".csv"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+barbearia",
+      "url": "/?action=%s"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.barbearia.fidelidade",
+      "id": "com.barbearia.fidelidade"
+    }
+  ]
 }

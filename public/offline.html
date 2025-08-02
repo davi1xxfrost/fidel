@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Barbearia Fidelidade</title>
+    <meta name="theme-color" content="#8B4513">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2B48C 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #8B4513;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        
+        .button {
+            background: #8B4513;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 48px;
+            min-width: 48px;
+        }
+        
+        .button:hover {
+            background: #7A3F11;
+            transform: translateY(-1px);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #8B4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .features {
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .feature-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+            background: #8B4513;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .title {
+                font-size: 1.25rem;
+            }
+            
+            body {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📱</div>
+        <h1 class="title">Você está offline</h1>
+        <p class="subtitle">
+            Não foi possível conectar à internet. Verifique sua conexão e tente novamente.
+        </p>
+        
+        <button class="button" onclick="checkConnection()">
+            <span id="button-text">Tentar Novamente</span>
+        </button>
+        
+        <div id="status" class="status offline">
+            Status: Desconectado
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <span>Alguns dados podem estar disponíveis offline</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <span>Suas ações serão sincronizadas quando voltar online</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"></div>
+                <span>Instale o app para melhor experiência offline</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isChecking = false;
+        
+        function updateStatus(online) {
+            const status = document.getElementById('status');
+            const button = document.querySelector('.button');
+            
+            if (online) {
+                status.className = 'status online';
+                status.textContent = 'Status: Conectado - Redirecionando...';
+                button.style.background = '#28a745';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            } else {
+                status.className = 'status offline';
+                status.textContent = 'Status: Desconectado';
+            }
+        }
+        
+        function checkConnection() {
+            if (isChecking) return;
+            
+            isChecking = true;
+            const buttonText = document.getElementById('button-text');
+            const originalText = buttonText.textContent;
+            
+            buttonText.innerHTML = '<span class="spinner"></span>Verificando...';
+            
+            // Check if online
+            if (navigator.onLine) {
+                // Double check with a real request
+                fetch('/', { 
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    timeout: 5000 
+                })
+                .then(response => {
+                    if (response.ok) {
+                        updateStatus(true);
+                    } else {
+                        throw new Error('Server not reachable');
+                    }
+                })
+                .catch(() => {
+                    updateStatus(false);
+                    buttonText.textContent = originalText;
+                    isChecking = false;
+                });
+            } else {
+                setTimeout(() => {
+                    updateStatus(false);
+                    buttonText.textContent = originalText;
+                    isChecking = false;
+                }, 1000);
+            }
+        }
+        
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            updateStatus(true);
+        });
+        
+        window.addEventListener('offline', () => {
+            updateStatus(false);
+        });
+        
+        // Initial status check
+        updateStatus(navigator.onLine);
+        
+        // Auto retry every 30 seconds
+        setInterval(() => {
+            if (navigator.onLine && !isChecking) {
+                checkConnection();
+            }
+        }, 30000);
+        
+        // Handle service worker updates
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data.type === 'CACHE_UPDATED') {
+                    // Cache has been updated, we might have new content
+                    const status = document.getElementById('status');
+                    status.className = 'status online';
+                    status.textContent = 'Conteúdo atualizado disponível!';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
