@@ -11,10 +11,27 @@ export default {
   ],
   prefix: "",
   theme: {
+    // Mobile-first breakpoints
+    screens: {
+      'xs': '320px',   // Extra small phones
+      'sm': '375px',   // Small phones
+      'md': '768px',   // Tablets
+      'lg': '1024px',  // Small laptops
+      'xl': '1280px',  // Large laptops
+      '2xl': '1536px', // Desktop
+    },
     container: {
       center: true,
-      padding: '2rem',
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.5rem',
+        lg: '2rem',
+      },
       screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
         '2xl': '1400px'
       }
     },
@@ -78,6 +95,32 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
+      },
+      // Mobile-optimized spacing
+      spacing: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+        '18': '4.5rem',
+        '22': '5.5rem',
+      },
+      // Touch-friendly minimum sizes
+      minHeight: {
+        'touch': '44px',
+        'touch-lg': '48px',
+        'touch-xl': '56px',
+      },
+      minWidth: {
+        'touch': '44px',
+        'touch-lg': '48px',
+        'touch-xl': '56px',
+      },
+      // Mobile-optimized shadows
+      boxShadow: {
+        'touch': '0 2px 8px rgba(0, 0, 0, 0.12)',
+        'elevated': '0 4px 16px rgba(0, 0, 0, 0.15)',
+        'floating': '0 8px 32px rgba(0, 0, 0, 0.18)',
       },
       keyframes: {
         'accordion-down': {
