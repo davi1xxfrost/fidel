@@ -285,3 +285,67 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* SPA Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+}
+
+/* Loading Bar Animation */
+@keyframes loadingProgress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+.loading-bar {
+  animation: loadingProgress 1s ease-in-out;
+}
+
+/* Smooth page navigation */
+.spa-container {
+  min-height: 100vh;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Mobile optimizations for transitions */
+@media (max-width: 768px) {
+  .page-transition-enter,
+  .page-transition-enter-active,
+  .page-transition-exit,
+  .page-transition-exit-active {
+    transition-duration: 200ms;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-enter,
+  .page-transition-enter-active,
+  .page-transition-exit,
+  .page-transition-exit-active {
+    transition: none;
+  }
+  
+  .animate-on-scroll {
+    transition: none;
+  }
+}

@@ -1,32 +1,35 @@
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login from '../pages/Login';
-import NotFound from "@/pages/NotFound";
-import BarbeariaPublica from "../pages/BarbeariaPublica";
-import BarbeariaLogin from "../pages/BarbeariaLogin";
-import BarbeariaCadastro from "../pages/BarbeariaCadastro";
-import AdminLogin from '../pages/AdminLogin';
-import AdminDashboard from '../pages/AdminDashboard';
-import AdminGestaoClientes from '../pages/AdminGestaoClientes';
-import AdminRelatorios from '../pages/AdminRelatorios';
-import AdminConfiguracoes from '../pages/AdminConfiguracoes';
-import AdminAuditoria from '../pages/AdminAuditoria';
-import AdminResetSenha from '../pages/AdminResetSenha';
-import BarbeariaDashboard from '../pages/BarbeariaDashboard';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import _BarbeariaRouter from '../pages/BarbeariaRouter';
-import Index from '../pages/Index';
-import BarbeariaListaClientes from '../pages/BarbeariaListaClientes';
-import BarbeariaFormularioNovoCliente from '../pages/BarbeariaFormularioNovoCliente';
-import BarbeariaScanQRCode from '../pages/BarbeariaScanQRCode';
-import BarbeariaDetalhesCliente from '../pages/BarbeariaDetalhesCliente';
-import CadastroCliente from '../pages/CadastroCliente';
-import ClienteMeuCartao from '../pages/ClienteMeuCartao';
-import ClienteRecompensas from '../pages/ClienteRecompensas';
-import ClienteHistorico from '../pages/ClienteHistorico';
-import ClienteFeedback from '../pages/ClienteFeedback';
-import BarbeariaResgatarRecompensa from '../pages/BarbeariaResgatarRecompensa';
-import BarbeariaComunicacao from '../pages/BarbeariaComunicacao';
-import BarbeariaGerenciarNiveis from '../pages/BarbeariaGerenciarNiveis';
+import PageTransition from '@/components/PageTransition';
+
+// Lazy load all pages for better performance
+const Login = React.lazy(() => import('../pages/Login'));
+const NotFound = React.lazy(() => import("@/pages/NotFound"));
+const BarbeariaPublica = React.lazy(() => import("../pages/BarbeariaPublica"));
+const BarbeariaLogin = React.lazy(() => import("../pages/BarbeariaLogin"));
+const BarbeariaCadastro = React.lazy(() => import("../pages/BarbeariaCadastro"));
+const AdminLogin = React.lazy(() => import('../pages/AdminLogin'));
+const AdminDashboard = React.lazy(() => import('../pages/AdminDashboard'));
+const AdminGestaoClientes = React.lazy(() => import('../pages/AdminGestaoClientes'));
+const AdminRelatorios = React.lazy(() => import('../pages/AdminRelatorios'));
+const AdminConfiguracoes = React.lazy(() => import('../pages/AdminConfiguracoes'));
+const AdminAuditoria = React.lazy(() => import('../pages/AdminAuditoria'));
+const AdminResetSenha = React.lazy(() => import('../pages/AdminResetSenha'));
+const BarbeariaDashboard = React.lazy(() => import('../pages/BarbeariaDashboard'));
+const Index = React.lazy(() => import('../pages/Index'));
+const BarbeariaListaClientes = React.lazy(() => import('../pages/BarbeariaListaClientes'));
+const BarbeariaFormularioNovoCliente = React.lazy(() => import('../pages/BarbeariaFormularioNovoCliente'));
+const BarbeariaScanQRCode = React.lazy(() => import('../pages/BarbeariaScanQRCode'));
+const BarbeariaDetalhesCliente = React.lazy(() => import('../pages/BarbeariaDetalhesCliente'));
+const CadastroCliente = React.lazy(() => import('../pages/CadastroCliente'));
+const ClienteMeuCartao = React.lazy(() => import('../pages/ClienteMeuCartao'));
+const ClienteRecompensas = React.lazy(() => import('../pages/ClienteRecompensas'));
+const ClienteHistorico = React.lazy(() => import('../pages/ClienteHistorico'));
+const ClienteFeedback = React.lazy(() => import('../pages/ClienteFeedback'));
+const BarbeariaResgatarRecompensa = React.lazy(() => import('../pages/BarbeariaResgatarRecompensa'));
+const BarbeariaComunicacao = React.lazy(() => import('../pages/BarbeariaComunicacao'));
+const BarbeariaGerenciarNiveis = React.lazy(() => import('../pages/BarbeariaGerenciarNiveis'));
 
 type Role = 'admin' | 'barbearia' | 'cliente';
 
@@ -149,55 +152,90 @@ const clienteRoutes: RouteConfig[] = [
   },
 ];
 
+// Loading fallback component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-muted-foreground">Carregando página...</p>
+    </div>
+  </div>
+);
+
 const AppRoutes = () => (
-  <Routes>
-    {/* Rotas públicas */}
-    {publicRoutes.map(({ path, element }) => (
-      <Route key={path} path={path} element={element} />
-    ))}
+  <PageTransition>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        {/* Rotas públicas */}
+        {publicRoutes.map(({ path, element }) => (
+          <Route 
+            key={path} 
+            path={path} 
+            element={
+              <Suspense fallback={<PageLoader />}>
+                {element}
+              </Suspense>
+            } 
+          />
+        ))}
 
-    {/* Rotas protegidas para admin */}
-    {adminRoutes.map(({ path, element, role }) => (
-      <Route
-        key={path}
-        path={path}
-        element={
-          <ProtectedRoute role={role || 'admin'}>
-            {element}
-          </ProtectedRoute>
-        }
-      />
-    ))}
+        {/* Rotas protegidas para admin */}
+        {adminRoutes.map(({ path, element, role }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute role={role || 'admin'}>
+                <Suspense fallback={<PageLoader />}>
+                  {element}
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+        ))}
 
-    {/* Rotas protegidas para barbearia */}
-    {barbeariaRoutes.map(({ path, element, role }) => (
-      <Route
-        key={path}
-        path={path}
-        element={
-          <ProtectedRoute role={role || 'barbearia'}>
-            {element}
-          </ProtectedRoute>
-        }
-      />
-    ))}
+        {/* Rotas protegidas para barbearia */}
+        {barbeariaRoutes.map(({ path, element, role }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute role={role || 'barbearia'}>
+                <Suspense fallback={<PageLoader />}>
+                  {element}
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+        ))}
 
-    {/* Rotas do cliente */}
-    {clienteRoutes.map(({ path, element, role }) => (
-      <Route
-        key={path}
-        path={path}
-        element={
-          <ProtectedRoute role={role || 'cliente'}>
-            {element}
-          </ProtectedRoute>
-        }
-      />
-    ))}
+        {/* Rotas do cliente */}
+        {clienteRoutes.map(({ path, element, role }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute role={role || 'cliente'}>
+                <Suspense fallback={<PageLoader />}>
+                  {element}
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+        ))}
 
-    {/* Rota para página não encontrada */}
-    <Route path="*" element={<NotFound />} />
-  </Routes>
+        {/* Rota para página não encontrada */}
+        <Route 
+          path="*" 
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <NotFound />
+            </Suspense>
+          } 
+        />
+      </Routes>
+    </Suspense>
+  </PageTransition>
 );
 
 export default AppRoutes;

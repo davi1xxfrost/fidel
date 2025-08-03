@@ -127,6 +127,25 @@ export interface RouteConfig {
   preload?: boolean;
 }
 
+export interface NavigationState {
+  isNavigating: boolean;
+  previousPath: string | null;
+  error: string | null;
+  preloadedRoutes: Set<string>;
+}
+
+export interface NavigationOptions {
+  replace?: boolean;
+  state?: any;
+  preventScroll?: boolean;
+}
+
+export interface PageTransitionOptions {
+  transition?: 'fade' | 'slide' | 'scale';
+  duration?: number;
+  showLoadingBar?: boolean;
+}
+
 // Feature-specific Types
 export interface QRCodeData {
   clienteId: string;

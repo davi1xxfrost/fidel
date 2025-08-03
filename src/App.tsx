@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { AppProvider } from "./shared/contexts/AppContext";
 import { LazyWrapper } from "./shared/components/Performance/LazyWrapper";
 import { ErrorBoundary } from "react-error-boundary";
+import NavigationTest from "./components/NavigationTest";
 
 // Lazy load routes for better performance
 const AppRoutes = React.lazy(() => import("./routes"));
@@ -108,11 +109,9 @@ const App: React.FC = () => {
                 v7_relativeSplatPath: true 
               }}
             >
-              <LazyWrapper fallback={<AppLoading />}>
-                <Suspense fallback={<AppLoading />}>
-                  <AppRoutes />
-                </Suspense>
-              </LazyWrapper>
+              <Suspense fallback={<AppLoading />}>
+                <AppRoutes />
+              </Suspense>
               
               {/* Toast notifications optimized for mobile */}
               <Toaster 
@@ -129,6 +128,9 @@ const App: React.FC = () => {
                 // Mobile-specific positioning
                 className="sm:top-4 top-2"
               />
+              
+              {/* Navigation Test Component (Development Only) */}
+              {process.env.NODE_ENV === 'development' && <NavigationTest />}
             </BrowserRouter>
           </TooltipProvider>
         </AppProvider>
