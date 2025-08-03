@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, UserPlus, CheckCircle, QrCode } from "lucide-react";
+import { UserPlus, CheckCircle, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import BarbeariaLayout from "@/components/BarbeariaLayout";
 
 const BarbeariaFormularioNovoCliente = () => {
   const { id: barbeariaId } = useParams(); // Pega o ID da barbearia da URL
@@ -169,27 +170,12 @@ const BarbeariaFormularioNovoCliente = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-barber-cream to-background">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-barber-brown-light text-primary-foreground p-6 shadow-elegant">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(`/barbearia/${barbeariaId}/clientes`)}
-            className="text-primary-foreground hover:bg-white/20 p-2"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-xl font-bold">Adicionar Novo Cliente</h1>
-            <p className="text-primary-foreground/80 text-sm">Cadastro de cliente</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Conteúdo principal */}
-      <div className="p-6">
+    <BarbeariaLayout
+      title="Adicionar Novo Cliente"
+      subtitle="Cadastro de cliente"
+      icon={UserPlus}
+    >
+      <div className="max-w-lg mx-auto">
         <Card className="max-w-sm mx-auto">
           <CardHeader>
             <CardTitle className="text-center flex items-center justify-center gap-2">
@@ -290,7 +276,7 @@ const BarbeariaFormularioNovoCliente = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </BarbeariaLayout>
   );
 };
 

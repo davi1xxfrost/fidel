@@ -43,11 +43,17 @@ const BarbeariaLayout = ({
   const [barbearia, setBarbearia] = useState<BarbeariaData | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      // No desktop, sidebar sempre visível; no mobile, fechada por padrão
+      if (!mobile) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
     };
 
     checkMobile();
@@ -74,22 +80,7 @@ const BarbeariaLayout = ({
     fetchBarbearia();
   }, [slug]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (!target.closest('.menu-container')) {
-        setShowMenu(false);
-      }
-    };
 
-    if (showMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showMenu]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -135,104 +126,15 @@ const BarbeariaLayout = ({
     }
   ];
 
-  // Se for mobile, renderiza o layout original
-  if (isMobile) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header Mobile Original */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Crown className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-gray-900">{barbearia ? barbearia.nome_barbearia : 'Barbearia'}</h1>
-                <p className="text-xs text-gray-500">Painel de Controle</p>
-              </div>
-            </div>
-            
-            {/* Menu Hambúrguer */}
-            <div className="relative menu-container">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowMenu(!showMenu)}
-                className="p-2 hover:bg-gray-100"
-              >
-                <Menu className="w-4 h-4" />
-              </Button>
-              
-              {/* Menu Dropdown */}
-              {showMenu && (
-                <div className="absolute right-0 top-12 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-                  <div className="p-2 space-y-1">
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        navigate(`/${slug}/resgatar-recompensa`);
-                        setShowMenu(false);
-                      }}
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100"
-                    >
-                      <Gift className="w-4 h-4 mr-3" />
-                      Resgatar Recompensa
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        navigate(`/${slug}/clientes`);
-                        setShowMenu(false);
-                      }}
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100"
-                    >
-                      <Users className="w-4 h-4 mr-3" />
-                      Ver Meus Clientes
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        navigate(`/${slug}/comunicacao`);
-                        setShowMenu(false);
-                      }}
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-3" />
-                      Central de Comunicação
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        navigate(`/${slug}/gerenciar-niveis`);
-                        setShowMenu(false);
-                      }}
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100"
-                    >
-                      <Settings className="w-4 h-4 mr-3" />
-                      Gerenciar Níveis de Fidelidade
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Conteúdo Mobile */}
-        <div className="p-4 max-w-4xl mx-auto">
-          {children}
-        </div>
-      </div>
-    );
-  }
+  // Layout responsivo unificado
 
   // Layout Desktop com Sidebar
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } lg:translate-x-0 lg:static lg:inset-0`}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      }`}>
         <div className="flex flex-col h-full">
           {/* Header da Sidebar */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -303,7 +205,7 @@ const BarbeariaLayout = ({
       )}
 
       {/* Conteúdo Principal */}
-      <div className="flex-1 flex flex-col lg:ml-0">
+      <div className="flex-1 flex flex-col">
         {/* Header Desktop */}
         <header className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
