@@ -22,7 +22,7 @@ export const useNavigation = () => {
 
   // Enhanced navigation function with loading states and error handling
   const navigateWithLoading = useCallback(
-    async (to: string, options: { replace?: boolean; state?: any } = {}) => {
+    async (to: string, options: { replace?: boolean; state?: unknown } = {}) => {
       try {
         setNavigationState(prev => ({
           ...prev,
@@ -50,7 +50,9 @@ export const useNavigation = () => {
           error: errorMessage,
         }));
         setError(errorMessage);
-        console.error('Navigation error:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Navigation error:', error);
+        }
       } finally {
         setNavigationState(prev => ({
           ...prev,

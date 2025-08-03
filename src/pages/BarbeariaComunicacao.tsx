@@ -19,10 +19,10 @@ interface Cliente {
 }
 
 const BarbeariaComunicacao = () => {
-  const { slug } = useParams();
-  const navigate = useNavigate();
+  const { slug: _slug } = useParams();
+  const _navigate = useNavigate();
   const [clientes, setClientes] = useState<Cliente[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const [mensagem, setMensagem] = useState("");
   const [tipoComunicacao, setTipoComunicacao] = useState<"todos" | "nivel" | "pontos">("todos");
   const [nivelSelecionado, setNivelSelecionado] = useState("");

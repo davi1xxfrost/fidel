@@ -114,7 +114,7 @@ export interface DeviceInfo {
 
 export interface PWAInstallPrompt {
   isInstallable: boolean;
-  deferredPrompt?: any;
+  deferredPrompt?: Event;
 }
 
 // Navigation Types
@@ -136,7 +136,7 @@ export interface NavigationState {
 
 export interface NavigationOptions {
   replace?: boolean;
-  state?: any;
+  state?: unknown;
   preventScroll?: boolean;
 }
 
@@ -157,5 +157,5 @@ export interface NotificationPayload {
   title: string;
   body: string;
   icon?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
