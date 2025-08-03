@@ -38,7 +38,7 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
   const checkBarbeariaAuth = useCallback(async (userId: string, barbeariaSlug?: string) => {
     try {
       if (!barbeariaSlug) {
-        navigate('/login');
+        navigate('/');
         return;
       }
 
@@ -49,7 +49,7 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
         .single();
 
       if (error || !barbearia || barbearia.usuario_auth_id !== userId) {
-        navigate('/login');
+        navigate(`/${barbeariaSlug}/login`);
         return;
       }
       
@@ -87,7 +87,13 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
         const { data: { session }, error: sessionError } = await authService.getSession();
 
         if (!session || sessionError) {
-          navigate(role === 'admin' ? '/admin' : '/login');
+          if (role === 'admin') {
+            navigate('/admin');
+          } else if (role === 'barbearia' && slug) {
+            navigate(`/${slug}/login`);
+          } else {
+            navigate('/login');
+          }
           return;
         }
 
