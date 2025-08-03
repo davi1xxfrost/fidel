@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useApp } from '@/shared/contexts/AppContext';
 
-interface PageTransitionProps {
+export interface PageTransitionProps {
   children: React.ReactNode;
   className?: string;
   transition?: 'fade' | 'slide' | 'scale';
@@ -149,20 +149,6 @@ const LoadingSpinner: React.FC = () => (
   </div>
 );
 
-// Higher-order component for easy page wrapping
-export const withPageTransition = <P extends object>(
-  Component: React.ComponentType<P>,
-  options?: Omit<PageTransitionProps, 'children'>
-) => {
-  const WrappedComponent: React.FC<P> = (props) => (
-    <PageTransition {...options}>
-      <Component {...props} />
-    </PageTransition>
-  );
 
-  WrappedComponent.displayName = `withPageTransition(${Component.displayName || Component.name})`;
-  
-  return WrappedComponent;
-};
 
 export default PageTransition;
