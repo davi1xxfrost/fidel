@@ -316,13 +316,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     dispatch({ type: 'UPDATE_PWA_STATE', payload: pwa });
   }, [pwa]);
   
-  // Initialize theme from localStorage
+  // Initialize theme from localStorage (only once)
   React.useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
     if (savedTheme) {
       setTheme(savedTheme);
     }
-  }, [setTheme]);
+  }, []); // Remove setTheme dependency to avoid infinite loop
   
   // Auto-clear errors after 5 seconds
   React.useEffect(() => {
@@ -332,7 +332,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [state.error, clearError]);
+  }, [state.error]); // Remove clearError dependency
   
   // Memoized context value
   const contextValue = useMemo<AppContextType>(() => ({

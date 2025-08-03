@@ -55,7 +55,9 @@ export const LazyWrapper: React.FC<LazyWrapperProps> = ({
   minHeight,
 }) => {
   const handleError = (error: Error, errorInfo: { componentStack: string }) => {
-    console.error('LazyWrapper error:', error, errorInfo);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('LazyWrapper error:', error, errorInfo);
+    }
   };
 
   return (

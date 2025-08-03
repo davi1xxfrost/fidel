@@ -114,7 +114,7 @@ export interface DeviceInfo {
 
 export interface PWAInstallPrompt {
   isInstallable: boolean;
-  deferredPrompt?: any;
+  deferredPrompt?: Event;
 }
 
 // Navigation Types
@@ -125,6 +125,25 @@ export interface RouteConfig {
   element: JSX.Element;
   role?: Role;
   preload?: boolean;
+}
+
+export interface NavigationState {
+  isNavigating: boolean;
+  previousPath: string | null;
+  error: string | null;
+  preloadedRoutes: Set<string>;
+}
+
+export interface NavigationOptions {
+  replace?: boolean;
+  state?: unknown;
+  preventScroll?: boolean;
+}
+
+export interface PageTransitionOptions {
+  transition?: 'fade' | 'slide' | 'scale';
+  duration?: number;
+  showLoadingBar?: boolean;
 }
 
 // Feature-specific Types
@@ -138,5 +157,5 @@ export interface NotificationPayload {
   title: string;
   body: string;
   icon?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }

@@ -29,7 +29,7 @@ export const TouchButton: React.FC<TouchButtonProps> = ({
   const longPressTimer = React.useRef<NodeJS.Timeout>();
 
   // Handle touch interactions
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (_e: React.TouchEvent) => {
     if (disabled || loading) return;
     
     setIsPressed(true);

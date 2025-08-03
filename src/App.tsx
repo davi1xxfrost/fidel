@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { AppProvider } from "./shared/contexts/AppContext";
-import { LazyWrapper } from "./shared/components/Performance/LazyWrapper";
 import { ErrorBoundary } from "react-error-boundary";
 
 // Lazy load routes for better performance
@@ -16,9 +15,10 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       cacheTime: 10 * 60 * 1000, // 10 minutes
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors
-        if (error?.status >= 400 && error?.status < 500) return false;
+        const httpError = error as { status?: number };
+        if (httpError?.status >= 400 && httpError?.status < 500) return false;
         return failureCount < 2;
       },
       refetchOnWindowFocus: false,
@@ -82,10 +82,14 @@ const App: React.FC = () => {
       navigator.serviceWorker
         .register('/sw.js')
         .then(registration => {
-          console.log('SW registered: ', registration);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('SW registered: ', registration);
+          }
         })
         .catch(registrationError => {
-          console.log('SW registration failed: ', registrationError);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('SW registration failed: ', registrationError);
+          }
         });
     }
   }, []);
@@ -95,7 +99,9 @@ const App: React.FC = () => {
       FallbackComponent={ErrorFallback}
       onReset={() => window.location.reload()}
       onError={(error, errorInfo) => {
-        console.error('App Error:', error, errorInfo);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('App Error:', error, errorInfo);
+        }
         // Here you could send error to monitoring service
       }}
     >
@@ -108,11 +114,9 @@ const App: React.FC = () => {
                 v7_relativeSplatPath: true 
               }}
             >
-              <LazyWrapper fallback={<AppLoading />}>
-                <Suspense fallback={<AppLoading />}>
-                  <AppRoutes />
-                </Suspense>
-              </LazyWrapper>
+              <Suspense fallback={<AppLoading />}>
+                <AppRoutes />
+              </Suspense>
               
               {/* Toast notifications optimized for mobile */}
               <Toaster 

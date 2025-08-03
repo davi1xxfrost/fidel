@@ -10,6 +10,8 @@ export default defineConfig(({ mode }) => ({
     port: 3030,
     open: false,
     cors: true,
+    // SPA fallback for client-side routing
+    historyApiFallback: true,
   },
   plugins: [
     react(),
@@ -39,6 +41,9 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1000,
     // Advanced rollup optimizations
     rollupOptions: {
+      input: {
+        main: './index.html'
+      },
       output: {
         // More granular code splitting for better caching
         manualChunks: (id) => {

@@ -20,14 +20,14 @@ export const MobileContainer: React.FC<MobileContainerProps> = ({
   centerContent = false,
   safeArea = true,
 }) => {
-  const { isMobile, isTablet } = useResponsive();
+  const { isMobile, isTablet: _isTablet } = useResponsive();
 
   const getPaddingClass = () => {
     if (padding === 'none') return '';
     
-    const mobileSpacing = SPACING.container.mobile;
-    const tabletSpacing = SPACING.container.tablet;
-    const desktopSpacing = SPACING.container.desktop;
+    const _mobileSpacing = SPACING.container.mobile;
+    const _tabletSpacing = SPACING.container.tablet;
+    const _desktopSpacing = SPACING.container.desktop;
 
     switch (padding) {
       case 'sm':

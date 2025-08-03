@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Scissors, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigation } from "@/hooks/useNavigation";
 
 const Login = () => {
-  const navigate = useNavigate();
+  const { navigate } = useNavigation();
   const { toast: _toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [showBarbeariaForm, setShowBarbeariaForm] = useState(false);
