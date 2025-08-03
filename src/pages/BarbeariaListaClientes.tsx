@@ -21,7 +21,7 @@ interface Cliente {
 const BarbeariaListaClientes = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const [_toast] = useToast();
+  const { toast: _toast } = useToast();
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

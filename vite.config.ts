@@ -10,8 +10,6 @@ export default defineConfig(({ mode }) => ({
     port: 3030,
     open: false,
     cors: true,
-    // Enable SPA fallback for client-side routing
-    historyApiFallback: true,
   },
   plugins: [
     react(),

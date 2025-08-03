@@ -18,7 +18,7 @@ interface NivelFidelidade {
 }
 
 const BarbeariaGerenciarNiveis = () => {
-  const [_slug] = useParams();
+  const { slug: _slug } = useParams();
   const [niveis, setNiveis] = useState<NivelFidelidade[]>([]);
   const [_loading, setLoading] = useState(true);
   const [editando, setEditando] = useState<string | null>(null);
