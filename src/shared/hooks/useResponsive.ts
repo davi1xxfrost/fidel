@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BREAKPOINTS } from '../constants/breakpoints';
 import type { DeviceInfo } from '../types';
 
@@ -72,7 +72,11 @@ export const useResponsive = (): UseResponsiveReturn => {
     return 'unknown';
   };
 
-  return {
+  const getBreakpointMemo = React.useCallback(getBreakpoint, [screenSize.width]);
+  const breakpoint = React.useMemo(() => getBreakpointMemo(), [getBreakpointMemo]);
+  const platform = React.useMemo(() => getPlatform(), []);
+
+  return React.useMemo(() => ({
     screenWidth: screenSize.width,
     screenHeight: screenSize.height,
     isMobile,
@@ -81,9 +85,9 @@ export const useResponsive = (): UseResponsiveReturn => {
     orientation,
     isPortrait: orientation === 'portrait',
     isLandscape: orientation === 'landscape',
-    breakpoint: getBreakpoint(),
-    platform: getPlatform(),
-  };
+    breakpoint,
+    platform,
+  }), [screenSize.width, screenSize.height, isMobile, isTablet, isDesktop, orientation, breakpoint, platform]);
 };
 
 // Hook for checking specific breakpoints

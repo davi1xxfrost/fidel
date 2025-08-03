@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsive } from '../../hooks/useResponsive';
-import { SPACING } from '../../constants/breakpoints';
+// import { SPACING } from '../../constants/breakpoints'; // Not needed for current implementation
 
 interface MobileContainerProps {
   children: React.ReactNode;
@@ -20,14 +20,12 @@ export const MobileContainer: React.FC<MobileContainerProps> = ({
   centerContent = false,
   safeArea = true,
 }) => {
-  const { isMobile, isTablet } = useResponsive();
+  const { isMobile } = useResponsive();
 
   const getPaddingClass = () => {
     if (padding === 'none') return '';
     
-    const mobileSpacing = SPACING.container.mobile;
-    const tabletSpacing = SPACING.container.tablet;
-    const desktopSpacing = SPACING.container.desktop;
+    // Spacing constants are handled by Tailwind classes directly
 
     switch (padding) {
       case 'sm':

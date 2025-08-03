@@ -1,5 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { PWAInstallPrompt } from '../types';
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{outcome: 'accepted' | 'dismissed'}>;
+}
+
+interface NavigatorStandalone extends Navigator {
+  standalone?: boolean;
+}
 
 interface UsePWAReturn extends PWAInstallPrompt {
   isOnline: boolean;
@@ -11,15 +20,15 @@ interface UsePWAReturn extends PWAInstallPrompt {
 }
 
 export const usePWA = (): UsePWAReturn => {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [updateAvailable, setUpdateAvailable] = useState(false);
 
   // Check if app is running in standalone mode
-  const isStandalone = useState(() => {
+  const [isStandalone] = useState(() => {
     return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone === true;
-  })[0];
+           (window.navigator as NavigatorStandalone).standalone === true;
+  });
 
   // Check if PWA can be installed
   const canInstall = 'serviceWorker' in navigator && 'PushManager' in window;
@@ -92,7 +101,10 @@ export const usePWA = (): UsePWAReturn => {
         setDeferredPrompt(null);
       }
     } catch (error) {
-      console.error('Failed to install PWA:', error);
+      // Silent error handling for production
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to install PWA:', error);
+      }
     }
   }, [deferredPrompt]);
 
@@ -108,7 +120,7 @@ export const usePWA = (): UsePWAReturn => {
     window.location.reload();
   }, []);
 
-  return {
+  return React.useMemo(() => ({
     isInstallable: !!deferredPrompt,
     deferredPrompt,
     isOnline,
@@ -117,7 +129,7 @@ export const usePWA = (): UsePWAReturn => {
     install,
     updateAvailable,
     reloadApp,
-  };
+  }), [deferredPrompt, isOnline, isStandalone, canInstall, install, updateAvailable, reloadApp]);
 };
 
 // Hook for managing app updates
@@ -153,7 +165,10 @@ export const useAppUpdate = () => {
         window.location.reload();
       }, 1000);
     } catch (error) {
-      console.error('Failed to update app:', error);
+      // Silent error handling for production
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to update app:', error);
+      }
       setIsUpdating(false);
     }
   }, [updateAvailable]);
