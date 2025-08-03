@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../integrations/supabase/client";
-import { Button } from "../components/ui/button";
+// import { Button } from "../components/ui/button"; // Not needed in layout version
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
-import { ArrowLeft, Users, Search, Crown, Star, Zap, Diamond, Trophy, User } from "lucide-react";
+import { Users, Search, Star, Zap, Diamond, Trophy, User } from "lucide-react";
 import { useToast } from "../hooks/use-toast";
+import BarbeariaLayout from "@/components/BarbeariaLayout";
 
 interface Cliente {
   id: string;
@@ -92,32 +93,12 @@ const BarbeariaListaClientes = () => {
   const mediaPontos = clientes.length > 0 ? Math.round(clientes.reduce((acc, c) => acc + c.pontos_acumulados, 0) / clientes.length) : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Compacto */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate(`/${slug}/dashboard`)}
-              className="p-2 hover:bg-gray-100"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <Users className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900">Clientes</h1>
-              <p className="text-xs text-gray-500">{totalClientes} clientes cadastrados</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Conteúdo Principal */}
-      <div className="p-4 max-w-6xl mx-auto">
+    <BarbeariaLayout
+      title="Clientes"
+      subtitle={`${totalClientes} clientes cadastrados`}
+      icon={Users}
+    >
+      <div className="space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
           <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
@@ -219,7 +200,7 @@ const BarbeariaListaClientes = () => {
           </div>
         )}
       </div>
-    </div>
+    </BarbeariaLayout>
   );
 };
 

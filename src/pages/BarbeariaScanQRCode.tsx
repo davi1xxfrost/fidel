@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, User, CheckCircle, Plus } from 'lucide-react';
+import { User, CheckCircle, Plus, Scan } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +8,7 @@ import { calcularNivelFidelidade } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import BarbeariaLayout from '@/components/BarbeariaLayout';
 
 interface Cliente {
   id: string;
@@ -296,25 +297,11 @@ const BarbeariaScanQRCode = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-      {/* Header */}
-      <div className="max-w-2xl mx-auto mb-6">
-        <div className="flex items-center gap-4 mb-4">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(`/${slug}/dashboard`)}
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Escanear QR Code</h1>
-            <p className="text-gray-600">Escaneie o QR Code do cliente para adicionar pontos</p>
-          </div>
-        </div>
-      </div>
-
+    <BarbeariaLayout
+      title="Escanear QR Code"
+      subtitle="Escaneie o QR Code do cliente para adicionar pontos"
+      icon={Scan}
+    >
       <div className="max-w-2xl mx-auto space-y-6">
         {!clienteEncontrado ? (
           /* Scanner */
@@ -493,7 +480,7 @@ const BarbeariaScanQRCode = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </BarbeariaLayout>
   );
 };
 

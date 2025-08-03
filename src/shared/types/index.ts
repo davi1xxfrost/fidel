@@ -112,9 +112,14 @@ export interface DeviceInfo {
   platform: string;
 }
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{outcome: 'accepted' | 'dismissed'}>;
+}
+
 export interface PWAInstallPrompt {
   isInstallable: boolean;
-  deferredPrompt?: any;
+  deferredPrompt?: BeforeInstallPromptEvent | null;
 }
 
 // Navigation Types
@@ -138,5 +143,5 @@ export interface NotificationPayload {
   title: string;
   body: string;
   icon?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }

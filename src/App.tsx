@@ -16,9 +16,10 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       cacheTime: 10 * 60 * 1000, // 10 minutes
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors
-        if (error?.status >= 400 && error?.status < 500) return false;
+        const errorObj = error as { status?: number };
+        if (errorObj?.status && errorObj.status >= 400 && errorObj.status < 500) return false;
         return failureCount < 2;
       },
       refetchOnWindowFocus: false,
@@ -82,10 +83,14 @@ const App: React.FC = () => {
       navigator.serviceWorker
         .register('/sw.js')
         .then(registration => {
-          console.log('SW registered: ', registration);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('SW registered: ', registration);
+          }
         })
         .catch(registrationError => {
-          console.log('SW registration failed: ', registrationError);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('SW registration failed: ', registrationError);
+          }
         });
     }
   }, []);
@@ -95,7 +100,9 @@ const App: React.FC = () => {
       FallbackComponent={ErrorFallback}
       onReset={() => window.location.reload()}
       onError={(error, errorInfo) => {
-        console.error('App Error:', error, errorInfo);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('App Error:', error, errorInfo);
+        }
         // Here you could send error to monitoring service
       }}
     >
